@@ -39,17 +39,9 @@
 
 import msafluid.*;
 
-import processing.opengl.*;
-import javax.media.opengl.*;
-
 final float FLUID_WIDTH = 120;
 
-float invWidth, invHeight;    // inverse of screen dimensions
-float aspectRatio, aspectRatio2;
-
 MSAFluidSolver2D fluidSolver;
-
-ParticleSystem particleSystem;
 
 PImage imgFluid;
 
@@ -58,12 +50,7 @@ boolean drawFluid = true;
 void setup() {
     size(960, 640, OPENGL);    // use OPENGL rendering for bilinear filtering on texture
 //    size(screen.width * 49/50, screen.height * 49/50, OPENGL);
-    hint( ENABLE_OPENGL_4X_SMOOTH );    // Turn on 4X antialiasing
-
-    invWidth = 1.0f/width;
-    invHeight = 1.0f/height;
-    aspectRatio = width * invHeight;
-    aspectRatio2 = aspectRatio * aspectRatio;
+   // hint( ENABLE_OPENGL_4X_SMOOTH );    // Turn on 4X antialiasing
 
     // create fluid and set options
     fluidSolver = new MSAFluidSolver2D((int)(FLUID_WIDTH), (int)(FLUID_WIDTH * height/width));
@@ -72,25 +59,11 @@ void setup() {
     // create image to hold fluid picture
     imgFluid = createImage(fluidSolver.getWidth(), fluidSolver.getHeight(), RGB);
 
-    // create particle system
-    particleSystem = new ParticleSystem();
-
-    // init TUIO
-    initTUIO();
 }
 
 
-void mouseMoved() {
-    float mouseNormX = mouseX * invWidth;
-    float mouseNormY = mouseY * invHeight;
-    float mouseVelX = (mouseX - pmouseX) * invWidth;
-    float mouseVelY = (mouseY - pmouseY) * invHeight;
-
-    addForce(mouseNormX, mouseNormY, mouseVelX, mouseVelY);
-}
 
 void draw() {
-    updateTUIO();
     fluidSolver.update();
 
     if(drawFluid) {
@@ -102,28 +75,31 @@ void draw() {
         image(imgFluid, 0, 0, width, height);
     } 
 
-    particleSystem.updateAndDraw();
 }
 
 void mousePressed() {
-    drawFluid ^= true;
+    drawFluid = ! drawFluid;
 }
 
 void keyPressed() {
-    switch(key) {
-    case 'r': 
-        renderUsingVA ^= true; 
-        println("renderUsingVA: " + renderUsingVA);
-        break;
-    }
     println(frameRate);
 }
 
 
 
+void mouseMoved() {
+    float mouseNormX = mouseX / float(width);
+    float mouseNormY = mouseY / float(height);
+    float mouseVelX = (mouseX - pmouseX) / float(width);
+    float mouseVelY = (mouseY - pmouseY) / float(height);
+
+    addForce(mouseNormX, mouseNormY, mouseVelX, mouseVelY);
+}
+
+
 // add force and dye to fluid, and create particles
 void addForce(float x, float y, float dx, float dy) {
-    float speed = dx * dx  + dy * dy * aspectRatio2;    // balance the x and y components of speed with the screen aspect ratio
+    float speed = dx * dx  + dy * dy * float(height)/float(width);    // balance the x and y components of speed with the screen aspect ratio
 
     if(speed > 0) {
         if(x<0) x = 0; 
@@ -147,7 +123,6 @@ void addForce(float x, float y, float dx, float dy) {
         fluidSolver.gOld[index]  += green(drawColor) * colorMult;
         fluidSolver.bOld[index]  += blue(drawColor) * colorMult;
 
-        particleSystem.addParticles(x * width, y * height, 10);
         fluidSolver.uOld[index] += dx * velocityMult;
         fluidSolver.vOld[index] += dy * velocityMult;
     }

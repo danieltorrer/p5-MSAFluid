@@ -28,7 +28,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE. 
  *
  * ***********************************************************************/ 
-
+/*
 class Particle {
     final static float MOMENTUM = 0.5;
     final static float FLUID_FORCE = 0.6;
@@ -112,15 +112,10 @@ class Particle {
     }
 
 
-    void drawOldSchool(GL gl) {
-        gl.glColor3f(alpha, alpha, alpha);
-        gl.glVertex2f(x-vx, y-vy);
-        gl.glVertex2f(x, y);
-    }
 
 }
 
-
+*/
 
 
 

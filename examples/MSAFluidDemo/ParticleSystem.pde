@@ -30,11 +30,10 @@
  * ***********************************************************************/ 
 
 import java.nio.FloatBuffer;
-import com.sun.opengl.util.*;
-
+/*
 boolean renderUsingVA = true;
 
-void fadeToColor(GL gl, float r, float g, float b, float speed) {
+void fadeToColor(PGraphicsOpenGL gl, float r, float g, float b, float speed) {
     gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
     gl.glColor4f(r, g, b, speed);
     gl.glBegin(GL.GL_QUADS);
@@ -121,7 +120,7 @@ class ParticleSystem {
 
 }
 
-
+*/
 
 
 
