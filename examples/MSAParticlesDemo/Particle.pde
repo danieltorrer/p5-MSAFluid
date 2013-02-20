@@ -55,7 +55,7 @@ class Particle {
         if(alpha == 0) return;
 
         // read fluid info and add to velocity
-        int fluidIndex = fluidSolver.getIndexForNormalizedPosition(x * invWidth, y * invHeight);
+        int fluidIndex = fluidSolver.getIndexForNormalizedPosition(x / float(width), y / float(height) );
         vx = fluidSolver.u[fluidIndex] * width * mass * FLUID_FORCE + vx * MOMENTUM;
         vy = fluidSolver.v[fluidIndex] * height * mass * FLUID_FORCE + vy * MOMENTUM;
 
@@ -89,27 +89,18 @@ class Particle {
         }
 
         // fade out a bit (and kill if alpha == 0);
-        alpha *= 0.999;
+        alpha *= 0.998;
         if(alpha < 0.01) alpha = 0;
 
     }
 
 
-    void updateVertexArrays(int i, FloatBuffer posBuffer, FloatBuffer colBuffer) {
-        int vi = i * 4;
-        posBuffer.put(vi++, x - vx);
-        posBuffer.put(vi++, y - vy);
-        posBuffer.put(vi++, x);
-        posBuffer.put(vi++, y);
-
-        int ci = i * 6;
-        colBuffer.put(ci++, alpha);
-        colBuffer.put(ci++, alpha);
-        colBuffer.put(ci++, alpha);
-        colBuffer.put(ci++, alpha);
-        colBuffer.put(ci++, alpha);
-        colBuffer.put(ci++, alpha);
+    void draw() {
+      fill(255,255,255,alpha);
+      rect(x,y,radius,radius);
     }
+
+    
 
 
 
