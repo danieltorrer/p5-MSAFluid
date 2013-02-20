@@ -63,6 +63,8 @@ public class MSAFluidSolver2D {
 	public float[]	uOld;
 	public float[]	vOld;
 
+	public PImage imgFluid;
+
 	public final String VERSION = "1.3.0";
 
 	/**
@@ -87,7 +89,7 @@ public class MSAFluidSolver2D {
 	 * @param NX number of cells in X direction
 	 * @param NY number of cells in Y direction
 	 */
-	public MSAFluidSolver2D(int NX, int NY) {
+	public MSAFluidSolver2D(PApplet p, int NX, int NY) {
 		r    = null;
 		rOld = null;
 		
@@ -104,7 +106,21 @@ public class MSAFluidSolver2D {
 		
 		_isInited = false;
 		setup(NX, NY);
+		imgFluid = p.createImage(getWidth(), getHeight(), RGB);
 	}
+	
+
+
+	public PImage fillImage() {
+		imgFluid.loadPixels();
+		for(int i=0; i<fluidSolver.getNumCells(); i++) {
+		    imgFluid.pixels[i] = PApplet.color(r[i], g[i], b[i]);
+		}  
+		imgFluid.updatePixels();//  fastblur(imgFluid, 2);
+		return imgFluid;
+	}
+
+
 
 	
 	/**
